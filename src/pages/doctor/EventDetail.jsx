@@ -397,7 +397,7 @@ export default function EventDetail() {
                         </>
                       )}
                       <span>•</span>
-                      <span>{format(new Date(note.created_date), "dd/MM HH:mm")}</span>
+                      <span>{note.created_date ? format(new Date(note.created_date), "dd/MM HH:mm") : ""}</span>
                     </div>
                   </CardContent>
                 </Card>

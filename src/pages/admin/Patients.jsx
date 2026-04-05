@@ -18,19 +18,6 @@ export default function Patients() {
   const [newRow, setNewRow] = useState(null);
   const [rowError, setRowError] = useState("");
 
-  // Only admins can view this page
-  if (user?.role !== "admin") {
-    return (
-      <div className="px-4 py-8 max-w-2xl mx-auto">
-        <Card>
-          <CardContent className="p-6 text-center text-destructive">
-            <p>אין לך הרשאה לגשת לעמוד זה</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   const { data: patients = [], isLoading } = useQuery({
     queryKey: ["all-patients"],
     queryFn: () => base44.entities.Patient.list(),
@@ -84,6 +71,19 @@ export default function Patients() {
     };
     addPatientMutation.mutate(payload);
   };
+
+  // Only admins can view this page
+  if (user?.role !== "admin") {
+    return (
+      <div className="px-4 py-8 max-w-2xl mx-auto">
+        <Card>
+          <CardContent className="p-6 text-center text-destructive">
+            <p>אין לך הרשאה לגשת לעמוד זה</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const genderLabels = { male: "זכר", female: "נקבה", other: "אחר" };
 
@@ -221,7 +221,7 @@ export default function Patients() {
                     <td className="px-4 py-2">{p.id_number}</td>
                     <td className="px-4 py-2">{p.age || calculateAge(p.date_of_birth)}</td>
                     <td className="px-4 py-2 text-xs">{p.gender ? genderLabels[p.gender] : "—"}</td>
-                    <td className="px-4 py-2 text-xs">—</td>
+                    <td className="px-4 py-2 text-xs">{p.site_id ? (sites.find((s) => s.id === p.site_id)?.name ?? "—") : "—"}</td>
                     <td className="px-4 py-2 text-xs">{formatDate(p.created_date)}</td>
                     <td className="px-4 py-2 text-center">
                       <Button
