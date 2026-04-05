@@ -8,7 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, Send, Trash2, MessageSquare, Stethoscope, Image as ImageIcon } from "lucide-react";
-import { format } from "date-fns";
+const formatDRC = (dateValue, withTime = false) => {
+  if (!dateValue) return "—";
+  const d = new Date(dateValue);
+  if (isNaN(d.getTime())) return "—";
+  const date = d.toLocaleDateString("en-GB", { timeZone: "Africa/Kinshasa", day: "2-digit", month: "2-digit", year: "numeric" });
+  if (!withTime) return date;
+  const time = d.toLocaleTimeString("en-GB", { timeZone: "Africa/Kinshasa", hour: "2-digit", minute: "2-digit", hour12: false });
+  return `${date} ${time}`;
+};
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/layout/PageHeader";
 import { EventCard, NoteCard, CheckupCard, PatientImageCard } from "@/components/timeline/TimelineCards";
@@ -252,7 +260,8 @@ export default function PatientTimeline() {
         <AddImageForm
           patientId={patientId}
           authorName={user?.full_name}
-          onSaved={() => { setActiveForm(null); refreshAll("patient-images"); }}
+          onSaved={() => setActiveForm(null)}
+          onSaveComplete={() => refreshAll("patient-images")}
           onCancel={() => setActiveForm(null)}
           onSaveError={(msg) => showToast(msg, true)}
         />
@@ -283,7 +292,7 @@ export default function PatientTimeline() {
                 {patient.date_of_birth && !isNaN(new Date(patient.date_of_birth)) && (
                    <div>
                      <span className="text-muted-foreground text-xs">תאריך לידה</span>
-                     <p className="font-medium">{format(new Date(patient.date_of_birth), "dd/MM/yyyy")}</p>
+                     <p className="font-medium">{formatDRC(patient.date_of_birth)}</p>
                    </div>
                  )}
                 {patient.blood_type && (
@@ -375,7 +384,7 @@ export default function PatientTimeline() {
                      <div className="flex items-center justify-center my-6">
                        <div className="absolute w-32 h-px bg-border" />
                        <span className="relative bg-background px-3 text-xs text-muted-foreground font-medium">
-                         {format(new Date(eventDate), "dd/MM/yyyy")}
+                         {formatDRC(eventDate)}
                        </span>
                      </div>
                    )}
@@ -383,7 +392,7 @@ export default function PatientTimeline() {
                     <div className="flex items-center gap-1 mb-1">
                        <div className={`absolute right-2.5 w-3 h-3 rounded-full border-2 border-card z-10 ${dotColor}`} />
                        <span className="text-xs text-muted-foreground">
-                         {item.date && !isNaN(new Date(item.date)) ? format(new Date(item.date), "dd/MM/yyyy HH:mm") : "—"}
+                         {formatDRC(item.date, true)}
                        </span>
                      </div>
                     {item.type === "event" && (
