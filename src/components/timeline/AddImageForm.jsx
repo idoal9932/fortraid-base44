@@ -27,6 +27,7 @@ export default function AddImageForm({ patientId, authorName, onSaved, onCancel,
 
   const handleSave = () => {
     if (!imageFile) return;
+    setSaving(true);
     // Optimistic: הצג הצלחה וסגור מיידית
     showToast("התמונה הועלתה ✓");
     setTimeout(() => onSaved(), 800);
