@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { X, Camera, Image as ImageIcon } from "lucide-react";
 
-export default function AddImageForm({ patientId, authorName, onSaved, onCancel, onSaveError }) {
+export default function AddImageForm({ patientId, authorName, onSaved, onCancel, onSaveError, onSaveComplete }) {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [caption, setCaption] = useState("");
@@ -41,12 +41,13 @@ export default function AddImageForm({ patientId, authorName, onSaved, onCancel,
         image_url: res.file_url,
         caption,
       });
+      onSaveComplete?.();
       base44.functions.invoke('notifyDoctorsOnImage', {
         patient_id: patientId,
         image_id: image.id,
         author_name: authorName,
         caption,
-      }).catch(() => {});
+      }).catch((err) => console.error("notifyDoctorsOnImage error:", err));
     };
     doSave().catch(() => {
       onSaveError?.("שגיאה בשמירה, נסה שוב");

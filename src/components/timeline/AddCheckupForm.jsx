@@ -80,7 +80,7 @@ export default function AddCheckupForm({ patientId, authorName, latestEventId, o
         vitals_temp: vitals.temp,
         vitals_glucose: vitals.glucose,
         note,
-      }).catch(() => {});
+      }).catch((err) => console.error("notifyDoctorsOnCheckup error:", err));
     };
     doSave().catch(() => {
       onSaveError?.("שגיאה בשמירה, נסה שוב");
