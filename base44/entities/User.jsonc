@@ -1,0 +1,23 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "paramedic",
+        "doctor"
+      ],
+      "default": "paramedic"
+    },
+    "current_site": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d0\u05ea\u05e8 \u05e0\u05d5\u05db\u05d7\u05d9"
+    },
+    "current_site_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d0\u05ea\u05e8 \u05e0\u05d5\u05db\u05d7\u05d9"
+    }
+  }
+}

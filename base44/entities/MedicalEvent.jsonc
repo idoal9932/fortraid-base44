@@ -1,0 +1,107 @@
+{
+  "name": "MedicalEvent",
+  "type": "object",
+  "properties": {
+    "patient_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05de\u05d8\u05d5\u05e4\u05dc"
+    },
+    "patient_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05de\u05d8\u05d5\u05e4\u05dc"
+    },
+    "site_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d0\u05ea\u05e8"
+    },
+    "site_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05d0\u05ea\u05e8"
+    },
+    "paramedic_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05e4\u05e8\u05d0\u05de\u05d3\u05d9\u05e7"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u05ea\u05d0\u05e8\u05d9\u05da \u05d5\u05e9\u05e2\u05ea \u05d4\u05d0\u05d9\u05e8\u05d5\u05e2"
+    },
+    "chief_complaint": {
+      "type": "string",
+      "description": "\u05ea\u05dc\u05d5\u05e0\u05d4 \u05e2\u05d9\u05e7\u05e8\u05d9\u05ea"
+    },
+    "vitals_bp": {
+      "type": "string",
+      "description": "\u05dc\u05d7\u05e5 \u05d3\u05dd"
+    },
+    "vitals_hr": {
+      "type": "number",
+      "description": "\u05d3\u05d5\u05e4\u05e7"
+    },
+    "vitals_spo2": {
+      "type": "number",
+      "description": "\u05e8\u05d9\u05d5\u05d5\u05d9\u05df \u05d7\u05de\u05e6\u05df"
+    },
+    "vitals_gcs": {
+      "type": "number",
+      "nullable": true,
+      "description": "GCS"
+    },
+    "vitals_glucose": {
+      "type": "number",
+      "nullable": true,
+      "description": "\u05e1\u05d5\u05db\u05e8 \u05d1\u05d3\u05dd (mg/dL)"
+    },
+    "treatment_given": {
+      "type": "string",
+      "description": "\u05d8\u05d9\u05e4\u05d5\u05dc \u05e9\u05e0\u05d9\u05ea\u05df"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "followup",
+        "closed"
+      ],
+      "default": "open",
+      "description": "\u05e1\u05d8\u05d8\u05d5\u05e1 \u05d4\u05d0\u05d9\u05e8\u05d5\u05e2"
+    },
+    "ai_recommendation": {
+      "type": "string",
+      "description": "\u05d4\u05de\u05dc\u05e6\u05ea AI"
+    }
+  },
+  "required": [
+    "patient_id",
+    "chief_complaint"
+  ],
+  "permissions": {
+    "paramedic": {
+      "read": true,
+      "create": true,
+      "update": {
+        "rule": "field_match",
+        "field": "site_id",
+        "user_field": "current_site"
+      },
+      "delete": {
+        "rule": "field_match",
+        "field": "site_id",
+        "user_field": "current_site"
+      }
+    },
+    "doctor": {
+      "read": true,
+      "create": false,
+      "update": true,
+      "delete": true
+    },
+    "admin": {
+      "read": true,
+      "create": true,
+      "update": true,
+      "delete": true
+    }
+  }
+}

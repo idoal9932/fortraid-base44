@@ -1,0 +1,22 @@
+{
+  "name": "EmailRecipient",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "\u05db\u05ea\u05d5\u05d1\u05ea \u05d3\u05d5\u05d0\u05f4\u05dc"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "doctor",
+        "paramedic"
+      ],
+      "description": "\u05ea\u05e4\u05e7\u05d9\u05d3 \u05d4\u05e0\u05de\u05e2\u05df"
+    }
+  },
+  "required": [
+    "email",
+    "role"
+  ]
+}
