@@ -17,7 +17,7 @@ const categoryLabels = {
   charged: "נטענים",
 };
 
-export default function InventoryTable({ items, isLoading, selectedCategory, setSelectedCategory }) {
+export default function InventoryTable({ items, isLoading, selectedCategory, setSelectedCategory, extraBetweenCategoriesAndTable }) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [editingCell, setEditingCell] = useState(null);
@@ -119,6 +119,8 @@ export default function InventoryTable({ items, isLoading, selectedCategory, set
           </Button>
         </div>
       )}
+
+      {extraBetweenCategoriesAndTable}
 
       {filteredItems.length === 0 ? (
         <Card>
