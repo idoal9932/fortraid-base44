@@ -93,8 +93,8 @@ export default function InventoryPage() {
   const getRowColor = (item) => {
     if (item.expiry_date) {
       const daysUntilExpiry = differenceInDays(new Date(item.expiry_date), new Date());
-      if (daysUntilExpiry < 0) return "bg-slate-700 text-white";
-      if (daysUntilExpiry <= 30) return "bg-yellow-50";
+      if (daysUntilExpiry < 0) return "bg-red-200 border-red-400";
+      if (daysUntilExpiry <= 30) return "bg-yellow-100 border-yellow-300";
     }
     if (item.min_threshold && item.quantity < item.min_threshold) return "bg-red-100";
     return "";
