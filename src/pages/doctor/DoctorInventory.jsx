@@ -50,7 +50,8 @@ export default function DoctorInventory() {
           <select
             value={selectedSiteId}
             onChange={e => { setSelectedSiteId(e.target.value); setSelectedCategory("all"); }}
-            className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+            className="w-full border rounded-md px-3 py-2 text-sm bg-background text-foreground appearance-none"
+            style={{ direction: "rtl" }}
           >
             <option value="">כל האתרים</option>
             {sites.map(s => (

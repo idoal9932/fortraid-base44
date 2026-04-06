@@ -44,9 +44,9 @@ export default function WeeklyCheckupDialog({ siteId, siteName, onClose, onSucce
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-card w-full max-w-md rounded-t-2xl p-6 space-y-4"
+        className="bg-card w-full max-w-md rounded-2xl p-6 space-y-4"
         onClick={e => e.stopPropagation()}
       >
         <h2 className="text-base font-bold text-center">בדיקה שבועית</h2>
