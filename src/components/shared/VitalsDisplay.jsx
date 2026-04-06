@@ -36,7 +36,7 @@ export default function VitalsDisplay({ event }) {
         <div className="grid grid-cols-3 gap-1.5 flex-shrink-0" style={{ width: "calc(60% + 0.25rem)" }}>
           {vitalsConfig.slice(0, 3).map(renderCard)}
         </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
+        <div className="flex gap-1.5 overflow-x-auto pb-0.5 flex-1 min-w-0" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
           {vitalsConfig.slice(3).map(renderCard)}
         </div>
       </div>
