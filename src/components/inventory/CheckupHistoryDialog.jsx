@@ -17,9 +17,9 @@ const resultColors = {
 
 export default function CheckupHistoryDialog({ siteName, checkups, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end justify-center" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-card w-full max-w-md rounded-t-2xl p-6 space-y-4 max-h-[80vh] flex flex-col"
+        className="bg-card w-full max-w-md rounded-2xl p-6 space-y-4 max-h-[80vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         <h2 className="text-base font-bold text-center">היסטוריית בדיקות שבועיות</h2>
