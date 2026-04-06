@@ -23,9 +23,7 @@ export default function InventoryAdmin() {
   const [siteFilter, setSiteFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [newItemModal, setNewItemModal] = useState(false);
-  const [newItem, setNewItem] = useState({ item_name: "", category: "equipment", quantity: 1, unit: "יח'", min_threshold: 1 });
-  const [editingCell, setEditingCell] = useState(null);
-  const [editValue, setEditValue] = useState("");
+  const [newItem, setNewItem] = useState({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1 });
   const queryClient = useQueryClient();
 
   const { data: items = [], isLoading: loadingItems } = useQuery({
@@ -46,8 +44,9 @@ export default function InventoryAdmin() {
     mutationFn: (itemData) => base44.entities.Inventory.create(itemData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
       setNewItemModal(false);
-      setNewItem({ item_name: "", category: "equipment", quantity: 1, unit: "יח'", min_threshold: 1 });
+      setNewItem({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1 });
     },
   });
 
@@ -63,14 +62,8 @@ export default function InventoryAdmin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
-      setEditingCell(null);
     },
   });
-
-  const commitEdit = (itemId) => {
-    if (!editingCell || editingCell.id !== itemId) return;
-    updateItemMutation.mutate({ itemId, data: { [editingCell.field]: editValue } });
-  };
 
   const getItemAlerts = (item) => {
     const alerts = [];
@@ -235,31 +228,10 @@ export default function InventoryAdmin() {
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          {/* שם פריט */}
-                          {editingCell?.id === item.id && editingCell.field === "item_name" ? (
-                            <input autoFocus className="border rounded px-2 py-0.5 text-sm font-semibold w-40"
-                              value={editValue} onChange={e => setEditValue(e.target.value)}
-                              onBlur={() => commitEdit(item.id)}
-                              onKeyDown={e => e.key === "Enter" && commitEdit(item.id)} />
-                          ) : (
-                            <p className="font-semibold text-sm cursor-pointer hover:bg-primary/10 px-1 rounded"
-                              onClick={() => { setEditingCell({ id: item.id, field: "item_name" }); setEditValue(item.item_name); }}>
-                              {item.item_name}
-                            </p>
-                          )}
-                          {/* קטגוריה */}
-                          {editingCell?.id === item.id && editingCell.field === "category" ? (
-                            <select autoFocus className="border rounded px-2 py-0.5 text-xs"
-                              value={editValue}
-                              onChange={e => { updateItemMutation.mutate({ itemId: item.id, data: { category: e.target.value } }); }}>
-                              {Object.entries(categoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                            </select>
-                          ) : (
-                            <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded cursor-pointer hover:bg-primary/10"
-                              onClick={() => { setEditingCell({ id: item.id, field: "category" }); setEditValue(item.category); }}>
-                              {categoryLabels[item.category] || item.category}
-                            </span>
-                          )}
+                          <p className="font-semibold text-sm">{item.item_name}</p>
+                          <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded">
+                            {categoryLabels[item.category] || item.category}
+                          </span>
                           {site && (
                             <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded">
                               {site.name}
