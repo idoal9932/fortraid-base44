@@ -10,21 +10,36 @@ const vitalsConfig = [
 ];
 
 export default function VitalsDisplay({ event }) {
+  const renderCard = ({ key, label, icon: Icon, unit, border }) => {
+    const value = event[key];
+    const hasValue = value !== undefined && value !== null && value !== "" && value !== 0;
+    return (
+      <div key={key} className={`bg-muted/50 rounded-xl p-2 text-center flex-shrink-0 ${border}`}>
+        <Icon className="w-3.5 h-3.5 mx-auto text-muted-foreground mb-1" />
+        <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
+        <p className="text-xs font-bold mt-0.5">
+          {hasValue ? `${value}${unit}` : <span className="text-muted-foreground font-normal">-</span>}
+        </p>
+      </div>
+    );
+  };
+
   return (
-    <div className="grid grid-cols-5 gap-1.5">
-      {vitalsConfig.map(({ key, label, icon: Icon, unit, border }) => {
-        const value = event[key];
-        const hasValue = value !== undefined && value !== null && value !== "" && value !== 0;
-        return (
-          <div key={key} className={`bg-muted/50 rounded-xl p-2 text-center ${border}`}>
-            <Icon className="w-3.5 h-3.5 mx-auto text-muted-foreground mb-1" />
-            <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
-            <p className="text-xs font-bold mt-0.5">
-              {hasValue ? `${value}${unit}` : <span className="text-muted-foreground font-normal">-</span>}
-            </p>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      {/* Desktop: grid 5 columns */}
+      <div className="hidden sm:grid grid-cols-5 gap-1.5">
+        {vitalsConfig.map(renderCard)}
+      </div>
+
+      {/* Mobile: first 3 fixed, last 2 scrollable */}
+      <div className="flex sm:hidden gap-1.5">
+        <div className="grid grid-cols-3 gap-1.5 flex-shrink-0" style={{ width: "calc(60% + 0.25rem)" }}>
+          {vitalsConfig.slice(0, 3).map(renderCard)}
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
+          {vitalsConfig.slice(3).map(renderCard)}
+        </div>
+      </div>
+    </>
   );
 }
