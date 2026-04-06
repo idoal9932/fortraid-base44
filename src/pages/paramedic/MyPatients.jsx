@@ -23,17 +23,12 @@ export default function MyPatients() {
     staleTime: 30 * 1000,
     gcTime: 5 * 60 * 1000,
     queryFn: async () => {
-      console.log("user site:", user?.current_site);
-      console.log("user site name:", user?.current_site_name);
-      
       let result;
       if (user?.current_site) {
         result = await base44.entities.MedicalEvent.filter({ site_id: user?.current_site }, "-created_date");
       } else {
         result = await base44.entities.MedicalEvent.list("-created_date");
       }
-      
-      console.log("all events:", result);
       return result;
     },
     enabled: !!user,
@@ -150,7 +145,7 @@ export default function MyPatients() {
                     <div className="flex items-center gap-3 text-xs text-muted-foreground mr-10">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {event.event_date ? format(new Date(event.event_date), "dd/MM/yyyy HH:mm") : ""}
+                        {event.event_date && !isNaN(new Date(event.event_date)) ? format(new Date(event.event_date), "dd/MM/yyyy HH:mm") : ""}
                       </span>
                       <StatusBadge status={event.status} />
                     </div>
