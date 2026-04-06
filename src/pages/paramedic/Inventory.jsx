@@ -65,10 +65,8 @@ export default function InventoryPage() {
       data: { quantity: item.min_threshold, last_checked: format(new Date(), "yyyy-MM-dd HH:mm"), checked_by: user?.full_name }
     }, {
       onSuccess: () => {
-        setTimeout(() => {
-          setConfirmingItem(null);
-          setCheckedItems(prev => ({ ...prev, [item.id]: false }));
-        }, 1500);
+        setConfirmingItem(null);
+        // checkedItems stays true — V remains visible
       }
     });
   };
