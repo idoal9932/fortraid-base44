@@ -62,24 +62,28 @@ export default function DoctorInventory() {
         </div>
 
         {/* Inventory Table + Checkup button between categories and table */}
-        {siteItems.length > 0 ? (
+        {!selectedSiteId ? (
+          <Card>
+            <CardContent className="p-8 text-center text-muted-foreground">
+              <p>להצגת ציוד יש לבחור אתר</p>
+            </CardContent>
+          </Card>
+        ) : siteItems.length > 0 ? (
           <InventoryTable
             items={siteItems}
             isLoading={isLoading}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             extraBetweenCategoriesAndTable={
-              selectedSiteId ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={`gap-2 w-full mb-2 ${isStale ? "border-red-400 text-red-600 hover:bg-red-50" : ""}`}
-                  onClick={() => setShowHistoryDialog(true)}
-                >
-                  <Calendar className="w-4 h-4" />
-                  בדיקה שבועית
-                </Button>
-              ) : null
+              <Button
+                variant="outline"
+                size="sm"
+                className={`gap-2 w-full mb-2 ${isStale ? "border-red-400 text-red-600 hover:bg-red-50" : ""}`}
+                onClick={() => setShowHistoryDialog(true)}
+              >
+                <Calendar className="w-4 h-4" />
+                בדיקה שבועית
+              </Button>
             }
           />
         ) : (
