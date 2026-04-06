@@ -187,13 +187,13 @@ export function CheckupCard({ checkup, onDelete, canEdit }) {
     setConfirmDelete(false);
   };
 
-  const vitalsArr = [
-    checkup.vitals_hr && `דופק: ${checkup.vitals_hr} bpm`,
-    checkup.vitals_bp && `ל"ד: ${checkup.vitals_bp}`,
-    checkup.vitals_spo2 && `SpO2: ${checkup.vitals_spo2}%`,
-    checkup.vitals_temp && `חום: ${checkup.vitals_temp}°C`,
-    checkup.vitals_glucose && `סוכר: ${checkup.vitals_glucose} mg/dL`,
-  ].filter(Boolean);
+  const vitalsItems = [
+    { label: "דופק",  value: checkup.vitals_hr,      unit: "bpm",    border: "border-r-4 border-r-red-500" },
+    { label: "ל\"ד",  value: checkup.vitals_bp,      unit: "",       border: "border-r-4 border-r-red-800" },
+    { label: "SpO2",  value: checkup.vitals_spo2,    unit: "%",      border: "border-r-4 border-r-blue-500" },
+    { label: "חום",   value: checkup.vitals_temp,    unit: "°C",     border: "border-r-4 border-r-yellow-400" },
+    { label: "סוכר",  value: checkup.vitals_glucose, unit: "mg/dL",  border: "border-r-4 border-r-purple-400" },
+  ].filter(({ value }) => value !== undefined && value !== null && value !== "");
 
   return (
     <>
@@ -218,10 +218,12 @@ export function CheckupCard({ checkup, onDelete, canEdit }) {
               </button>
             )}
           </div>
-          {vitalsArr.length > 0 && (
+          {vitalsItems.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {vitalsArr.map((v, i) => (
-                <span key={i} className="text-xs bg-muted px-2 py-1 rounded-full">{v}</span>
+              {vitalsItems.map(({ label, value, unit, border }, i) => (
+                <span key={i} className={`text-xs bg-muted px-2 py-1 rounded-full ${border}`}>
+                  {label}: {value}{unit}
+                </span>
               ))}
             </div>
           )}
