@@ -23,7 +23,7 @@ export default function InventoryAdmin() {
   const [siteFilter, setSiteFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [newItemModal, setNewItemModal] = useState(false);
-  const [newItem, setNewItem] = useState({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1 });
+  const [newItem, setNewItem] = useState({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1, site_id: "" });
   const queryClient = useQueryClient();
 
   const { data: items = [], isLoading: loadingItems } = useQuery({
@@ -46,7 +46,7 @@ export default function InventoryAdmin() {
       queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
       queryClient.invalidateQueries({ queryKey: ["inventory"] });
       setNewItemModal(false);
-      setNewItem({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1 });
+      setNewItem({ item_name: "", category: "rashm_tzfp_car", quantity: 1, unit: "יח'", min_threshold: 1, site_id: "" });
     },
   });
 
@@ -141,6 +141,16 @@ export default function InventoryAdmin() {
                   value={newItem.item_name}
                   onChange={(e) => setNewItem({ ...newItem, item_name: e.target.value })}
                 />
+                <Select value={newItem.site_id} onValueChange={(v) => setNewItem({ ...newItem, site_id: v })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="בחר אתר" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sites.map((s) => (
+                      <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Select value={newItem.category} onValueChange={(v) => setNewItem({ ...newItem, category: v })}>
                   <SelectTrigger>
                     <SelectValue />
@@ -172,13 +182,8 @@ export default function InventoryAdmin() {
               </div>
               <div className="flex gap-2">
                 <Button
-                  onClick={() =>
-                    createItemMutation.mutate({
-                      ...newItem,
-                      site_id: siteFilter === "all" ? "" : siteFilter,
-                    })
-                  }
-                  disabled={!newItem.item_name || createItemMutation.isPending}
+                  onClick={() => createItemMutation.mutate(newItem)}
+                  disabled={!newItem.item_name || !newItem.site_id || createItemMutation.isPending}
                   className="flex-1"
                 >
                   {createItemMutation.isPending ? "יוצר..." : "הוסף"}
