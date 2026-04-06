@@ -13,6 +13,7 @@ const paramedicTabs = [
 const doctorTabs = [
   { path: "/dashboard", label: "דשבורד", icon: LayoutDashboard },
   { path: "/doctor/patients", label: "מטופלים", icon: Users },
+  { path: "/doctor/inventory", label: "ציוד", icon: Package },
   { path: "/settings", label: "הגדרות", icon: Settings },
 ];
 

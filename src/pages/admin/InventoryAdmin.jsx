@@ -6,22 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Package, Trash2, Plus } from "lucide-react";
+import { Package, Trash2, Plus, Check, X } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import PageHeader from "@/components/layout/PageHeader";
 
 const categoryLabels = {
-  equipment: "ציוד בסיסי",
-  medication: "תרופות",
-  consumable: "צינורות וטיפולים",
-  other: "אחר",
+  rashm_tzfp_car: "רשמ״צ רכב",
+  monitoring: "מכשור רפואי",
+  medications: "תרופות",
+  medications_routine: "תרופות שגרה",
+  medical_kit: "תיק מטפל",
+  charged: "נטענים",
 };
+
+const emptyNewItem = () => ({ item_name: "", category: "", quantity: "", unit: "יח'", min_threshold: "", expiry_date: "", notes: "", site_id: "" });
 
 export default function InventoryAdmin() {
   const [siteFilter, setSiteFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [newItemModal, setNewItemModal] = useState(false);
-  const [newItem, setNewItem] = useState({ item_name: "", category: "equipment", quantity: 1, unit: "יח'", min_threshold: 1 });
+  const [addingRow, setAddingRow] = useState(false);
+  const [newItem, setNewItem] = useState(emptyNewItem());
   const queryClient = useQueryClient();
 
   const { data: items = [], isLoading: loadingItems } = useQuery({
@@ -42,20 +46,14 @@ export default function InventoryAdmin() {
     mutationFn: (itemData) => base44.entities.Inventory.create(itemData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
-      setNewItemModal(false);
-      setNewItem({ item_name: "", category: "equipment", quantity: 1, unit: "יח'", min_threshold: 1 });
+      queryClient.invalidateQueries({ queryKey: ["inventory"] });
+      setAddingRow(false);
+      setNewItem(emptyNewItem());
     },
   });
 
   const deleteItemMutation = useMutation({
     mutationFn: (itemId) => base44.entities.Inventory.delete(itemId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
-    },
-  });
-
-  const updateItemMutation = useMutation({
-    mutationFn: ({ itemId, data }) => base44.entities.Inventory.update(itemId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventory-all"] });
     },
@@ -79,16 +77,6 @@ export default function InventoryAdmin() {
   if (categoryFilter !== "all") {
     filteredItems = filteredItems.filter((i) => i.category === categoryFilter);
   }
-
-  const groupedItems = filteredItems.reduce((acc, item) => {
-    const cat = item.category || "other";
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(item);
-    return acc;
-  }, {});
-
-  const categoryOrder = ["equipment", "medication", "consumable", "other"];
-  const sortedCategories = categoryOrder.filter((cat) => groupedItems[cat]);
 
   return (
     <div>
@@ -117,147 +105,179 @@ export default function InventoryAdmin() {
               {Object.entries(categoryLabels).map(([key, label]) => (
                 <SelectItem key={key} value={key}>{label}</SelectItem>
               ))}
+
             </SelectContent>
           </Select>
 
-          <Button onClick={() => setNewItemModal(true)} className="gap-2">
+          <Button onClick={() => { setAddingRow(true); setNewItem(emptyNewItem()); }} className="gap-2" disabled={addingRow}>
             <Plus className="w-4 h-4" />
             הוסף פריט
           </Button>
         </div>
 
-        {/* Add Item Modal */}
-        {newItemModal && (
-          <Card className="border-primary">
-            <CardContent className="p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  placeholder="שם הפריט"
-                  value={newItem.item_name}
-                  onChange={(e) => setNewItem({ ...newItem, item_name: e.target.value })}
-                />
-                <Select value={newItem.category} onValueChange={(v) => setNewItem({ ...newItem, category: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(categoryLabels).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  type="number"
-                  placeholder="כמות"
-                  value={newItem.quantity}
-                  onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 0 })}
-                />
-                <Input
-                  placeholder="יחידה"
-                  value={newItem.unit}
-                  onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
-                />
-                <Input
-                  type="number"
-                  placeholder="מינימום"
-                  value={newItem.min_threshold}
-                  onChange={(e) => setNewItem({ ...newItem, min_threshold: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() =>
-                    createItemMutation.mutate({
-                      ...newItem,
-                      site_id: siteFilter === "all" ? "" : siteFilter,
-                    })
-                  }
-                  disabled={!newItem.item_name || createItemMutation.isPending}
-                  className="flex-1"
-                >
-                  {createItemMutation.isPending ? "יוצר..." : "הוסף"}
-                </Button>
-                <Button variant="outline" onClick={() => setNewItemModal(false)} className="flex-1">
-                  ביטול
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Items List */}
-        {loadingItems && Array(3).fill(0).map((_, i) => (
-          <Card key={i}><CardContent className="p-4"><Skeleton className="h-16" /></CardContent></Card>
-        ))}
-
-        {!loadingItems && filteredItems.length === 0 && (
-          <Card>
-            <CardContent className="p-8 text-center text-muted-foreground">
-              <Package className="w-10 h-10 mx-auto mb-2 opacity-40" />
-              <p>אין פריטים</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {sortedCategories.map((category) => (
-          <div key={category} className="space-y-2">
-            <h3 className="font-bold text-sm px-4 pt-2">{categoryLabels[category]}</h3>
-            {groupedItems[category].map((item) => {
-              const site = sites.find((s) => s.id === item.site_id);
-              const alerts = getItemAlerts(item);
-              const isLowStock = alerts.includes("low_stock");
-              const isExpiringSoon = alerts.includes("expiring_soon");
-              const isExpired = alerts.includes("expired");
-
-              return (
-                <Card
-                  key={item.id}
-                  className={`transition-all ${
-                    isLowStock ? "border-destructive/50 bg-red-50" :
-                    isExpiringSoon ? "border-yellow-400/50 bg-yellow-50" :
-                    isExpired ? "border-destructive bg-red-50" : ""
-                  }`}
-                >
-                  <CardContent className="p-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-semibold text-sm">{item.item_name}</p>
-                          {site && (
-                            <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded">
-                              {site.name}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 flex-wrap">
-                          <span>כמות: <strong className={isLowStock ? "text-destructive" : ""}>{item.quantity}</strong> {item.unit}</span>
-                          <span>| מינימום: {item.min_threshold}</span>
-                          {item.expiry_date && (
-                            <span className={isExpired ? "text-destructive font-semibold" : isExpiringSoon ? "text-yellow-600" : ""}>
-                              | {format(new Date(item.expiry_date), "dd/MM/yyyy")}
-                            </span>
-                          )}
-                        </div>
+        {/* Items Table */}
+        {loadingItems ? (
+          <Card><CardContent className="p-4"><Skeleton className="h-32" /></CardContent></Card>
+        ) : (
+          <div className="border rounded-lg overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary border-b">
+                <tr>
+                  <th className="px-3 py-2 text-right font-semibold">שם פריט *</th>
+                  <th className="px-3 py-2 text-right font-semibold">קטגוריה *</th>
+                  <th className="px-3 py-2 text-right font-semibold">אתר</th>
+                  <th className="px-3 py-2 text-center font-semibold">כמות</th>
+                  <th className="px-3 py-2 text-center font-semibold">מינימום</th>
+                  <th className="px-3 py-2 text-right font-semibold">תפוגה</th>
+                  <th className="px-3 py-2 text-right font-semibold">הערות</th>
+                  <th className="px-3 py-2 text-center font-semibold">פעולות</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* New item row */}
+                {addingRow && (
+                  <tr className="border-b bg-primary/5">
+                    <td className="px-2 py-1.5">
+                      <Input
+                        autoFocus
+                        placeholder="שם הפריט"
+                        value={newItem.item_name}
+                        onChange={(e) => setNewItem({ ...newItem, item_name: e.target.value })}
+                        className="h-8 text-sm"
+                      />
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Select value={newItem.category} onValueChange={(v) => setNewItem({ ...newItem, category: v })}>
+                        <SelectTrigger className="h-8 text-sm">
+                          <SelectValue placeholder="בחר קטגוריה" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(categoryLabels).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>{label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Select value={newItem.site_id} onValueChange={(v) => setNewItem({ ...newItem, site_id: v })}>
+                        <SelectTrigger className="h-8 text-sm">
+                          <SelectValue placeholder="אתר" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sites.map((s) => (
+                            <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Input
+                        type="number" min="0"
+                        placeholder="0"
+                        value={newItem.quantity}
+                        onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
+                        className="h-8 w-16 text-center text-sm"
+                      />
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Input
+                        type="number" min="0"
+                        placeholder="0"
+                        value={newItem.min_threshold}
+                        onChange={(e) => setNewItem({ ...newItem, min_threshold: e.target.value })}
+                        className="h-8 w-16 text-center text-sm"
+                      />
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Input
+                        type="date"
+                        value={newItem.expiry_date}
+                        onChange={(e) => setNewItem({ ...newItem, expiry_date: e.target.value })}
+                        className="h-8 text-sm"
+                      />
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <Input
+                        placeholder="הערות"
+                        value={newItem.notes}
+                        onChange={(e) => setNewItem({ ...newItem, notes: e.target.value })}
+                        className="h-8 text-sm"
+                      />
+                    </td>
+                    <td className="px-2 py-1.5">
+                      <div className="flex items-center justify-center gap-1">
+                        <Button
+                          size="icon" variant="default"
+                          className="h-7 w-7 bg-green-600 hover:bg-green-700"
+                          disabled={!newItem.item_name || !newItem.category || createItemMutation.isPending}
+                          onClick={() => createItemMutation.mutate({
+                            ...newItem,
+                            quantity: parseFloat(newItem.quantity) || 0,
+                            min_threshold: parseFloat(newItem.min_threshold) || 0,
+                            expiry_date: newItem.expiry_date || undefined,
+                            notes: newItem.notes || undefined,
+                            site_id: newItem.site_id || undefined,
+                          })}
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button
+                          size="icon" variant="ghost"
+                          className="h-7 w-7 text-destructive hover:text-destructive"
+                          onClick={() => { setAddingRow(false); setNewItem(emptyNewItem()); }}
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </Button>
                       </div>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="h-8 w-8 text-destructive hover:text-destructive shrink-0"
-                        onClick={() => {
-                          if (confirm(`מחק ${item.item_name}?`)) {
-                            deleteItemMutation.mutate(item.id);
-                          }
-                        }}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                    </td>
+                  </tr>
+                )}
+
+                {/* Existing items */}
+                {filteredItems.length === 0 && !addingRow ? (
+                  <tr>
+                    <td colSpan={8} className="py-10 text-center text-muted-foreground">
+                      <Package className="w-8 h-8 mx-auto mb-2 opacity-40" />
+                      <p>אין פריטים</p>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredItems.map((item) => {
+                    const site = sites.find((s) => s.id === item.site_id);
+                    const alerts = getItemAlerts(item);
+                    const isLowStock = alerts.includes("low_stock");
+                    const isExpiringSoon = alerts.includes("expiring_soon");
+                    const isExpired = alerts.includes("expired");
+                    const rowCls = isExpired ? "bg-red-50 border-red-300" : isLowStock ? "bg-red-50" : isExpiringSoon ? "bg-yellow-50" : "";
+
+                    return (
+                      <tr key={item.id} className={`border-b transition-colors hover:bg-accent/30 ${rowCls}`}>
+                        <td className="px-3 py-2 font-medium">{item.item_name}</td>
+                        <td className="px-3 py-2 text-xs">{categoryLabels[item.category] || item.category}</td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">{site?.name || "—"}</td>
+                        <td className={`px-3 py-2 text-center font-semibold ${isLowStock ? "text-destructive" : ""}`}>{item.quantity} {item.unit}</td>
+                        <td className="px-3 py-2 text-center text-xs text-muted-foreground">{item.min_threshold || "—"}</td>
+                        <td className={`px-3 py-2 text-xs ${isExpired ? "text-destructive font-semibold" : isExpiringSoon ? "text-yellow-600" : ""}`}>
+                          {item.expiry_date ? format(new Date(item.expiry_date), "dd/MM/yyyy") : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-xs text-muted-foreground max-w-xs truncate">{item.notes || "—"}</td>
+                        <td className="px-3 py-2 text-center">
+                          <Button
+                            size="icon" variant="ghost"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            onClick={() => { if (confirm(`מחק ${item.item_name}?`)) deleteItemMutation.mutate(item.id); }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

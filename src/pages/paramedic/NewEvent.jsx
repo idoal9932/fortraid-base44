@@ -58,6 +58,7 @@ export default function NewEvent() {
        vitals_bp: bp,
        vitals_hr: Number(vitals.hr) || 0,
        vitals_spo2: Number(vitals.spo2) || 0,
+       vitals_temp: vitals.temp ? Number(vitals.temp) : undefined,
        vitals_glucose: vitals.glucose ? Number(vitals.glucose) : undefined,
        treatment_given: [
          clinical.background ? `רקע: ${clinical.background}` : "",
@@ -146,7 +147,7 @@ export default function NewEvent() {
           )}
         </div>
         <Button onClick={reset} className="w-full h-16 text-xl font-bold bg-[#dc2626] hover:bg-[#b91c1c] text-white">
-          + פתח אירוע חדש
+          פתח אירוע חדש
         </Button>
       </div>
     );

@@ -14,6 +14,7 @@ import PatientTimeline from '@/pages/shared/PatientTimeline';
 import DoctorDashboard from '@/pages/doctor/Dashboard';
 import DoctorPatients from '@/pages/doctor/Patients';
 import EventDetail from '@/pages/doctor/EventDetail';
+import DoctorInventory from '@/pages/doctor/DoctorInventory';
 import SelectRole from '@/pages/shared/SelectRole';
 import Onboarding from '@/pages/shared/Onboarding';
 import InventoryAdmin from '@/pages/admin/InventoryAdmin';
@@ -80,6 +81,7 @@ const AuthenticatedApp = () => {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DoctorDashboard />} />
             <Route path="/doctor/patients" element={<DoctorPatients />} />
+            <Route path="/doctor/inventory" element={<DoctorInventory />} />
             <Route path="/event/:id" element={<EventDetail />} />
             <Route path="/timeline/:patientId" element={<PatientTimeline />} />
             <Route path="/settings" element={<Settings />} />

@@ -91,7 +91,7 @@ export default function CopyToWhatsApp({ event, imageCount = 0 }) {
       onClick={handleCopy}
       className="w-full flex items-center justify-center gap-2 h-11 rounded-xl border-2 border-green-500 text-green-600 font-semibold text-base hover:bg-green-50 transition-all active:scale-[0.98]"
     >
-      {copied ? "✅ הועתק!" : "📋 העתק לוואטסאפ"}
+      {copied ? "הועתק!" : "העתק לוואטסאפ"}
     </button>
   );
 }

@@ -47,7 +47,7 @@ export default function AddCheckupForm({ patientId, authorName, latestEventId, o
 
   const handleSave = () => {
     // Optimistic: הצג הצלחה וסגור מיידית
-    showToast("הבדיקה נוספה ✓");
+    showToast("הבדיקה נוספה");
     setTimeout(() => onSaved(), 800);
 
     // שמירה ברקע

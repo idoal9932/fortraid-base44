@@ -137,7 +137,7 @@ export default function PatientTimeline() {
       // סגור טופס ועדכן UI מיידית
       setNoteContent("");
       setActiveForm(null);
-      showToast("ההערה נוספה ✓");
+      showToast("ההערה נוספה");
       return { previous };
     },
     onError: (_err, _vars, context) => {
