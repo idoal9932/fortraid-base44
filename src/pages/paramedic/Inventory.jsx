@@ -118,7 +118,7 @@ export default function InventoryPage() {
         {items.length > 0 && (
           <>
             {/* Filter Buttons */}
-             <div className="flex gap-2 flex-wrap mb-6 mt-10">
+             <div className="flex gap-2 flex-wrap mb-6 mt-10 items-center">
                {categories.map(cat => (
                  <Button
                    key={cat}
@@ -130,6 +130,21 @@ export default function InventoryPage() {
                    {cat === "all" ? "הכל" : categoryLabels[cat]}
                  </Button>
                ))}
+               {selectedCategory !== "all" && (
+                 <Button
+                   size="sm"
+                   variant="outline"
+                   className="text-xs h-5 px-2.5 py-0 border-green-500 text-green-600 hover:bg-green-50"
+                   onClick={() => {
+                     const newChecked = { ...checkedItems };
+                     filteredItems.forEach(item => { newChecked[item.id] = true; });
+                     setCheckedItems(newChecked);
+                   }}
+                 >
+                   <Check className="w-3 h-3 ml-1" />
+                   סמן הכל
+                 </Button>
+               )}
              </div>
 
             {/* Table */}
