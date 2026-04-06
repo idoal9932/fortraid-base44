@@ -230,7 +230,7 @@ export default function EventDetail() {
        )}
 
        <div>
-        <PageHeader title={event.patient_name} subtitle={`אירוע מ-${event.event_date ? format(new Date(event.event_date), "dd/MM/yyyy") : ""}`}>
+        <PageHeader title={event.patient_name} subtitle={`אירוע מ-${event.event_date && !isNaN(new Date(event.event_date)) ? format(new Date(event.event_date), "dd/MM/yyyy") : ""}`}>
           <Button variant="ghost" size="icon" className="text-primary-foreground" onClick={() => navigate(-1)}>
             <ArrowRight className="w-5 h-5" />
           </Button>
@@ -397,7 +397,7 @@ export default function EventDetail() {
                         </>
                       )}
                       <span>•</span>
-                      <span>{note.created_date ? format(new Date(note.created_date), "dd/MM HH:mm") : ""}</span>
+                      <span>{note.created_date && !isNaN(new Date(note.created_date)) ? format(new Date(note.created_date), "dd/MM HH:mm") : ""}</span>
                     </div>
                   </CardContent>
                 </Card>

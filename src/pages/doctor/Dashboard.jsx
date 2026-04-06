@@ -166,7 +166,7 @@ export default function DoctorDashboard() {
                     <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {event.event_date ? format(new Date(event.event_date), "dd/MM HH:mm") : ""}
+                        {event.event_date && !isNaN(new Date(event.event_date)) ? format(new Date(event.event_date), "dd/MM HH:mm") : ""}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />

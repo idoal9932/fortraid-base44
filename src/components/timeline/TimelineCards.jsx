@@ -68,6 +68,9 @@ export function EventCard({ event, onDelete, onEdit, canEdit, userRole }) {
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-primary" />
               <span className="font-semibold text-sm">אירוע רפואי</span>
+              {event.id && (
+                <span className="text-xs text-muted-foreground font-normal ml-1">#{event.id.slice(0, 4).toUpperCase()}</span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <StatusBadge status={event.status} />
