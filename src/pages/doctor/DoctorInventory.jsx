@@ -49,7 +49,7 @@ export default function DoctorInventory() {
         {/* Site Selector */}
         <div className="mt-6">
           <Select value={selectedSiteId} onValueChange={val => { setSelectedSiteId(val === "__all__" ? "" : val); setSelectedCategory("all"); }}>
-            <SelectTrigger className="w-full" dir="rtl">
+            <SelectTrigger className="w-1/3" dir="rtl">
               <SelectValue placeholder="כל האתרים" />
             </SelectTrigger>
             <SelectContent dir="rtl" position="popper" className="w-full min-w-[var(--radix-select-trigger-width)]">
