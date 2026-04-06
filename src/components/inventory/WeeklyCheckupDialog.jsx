@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { motion, AnimatePresence } from "framer-motion";
 
 const resultOptions = [
   { value: "all_present", label: "הכל קיים" },
@@ -14,6 +15,12 @@ export default function WeeklyCheckupDialog({ siteId, siteName, onClose, onSucce
   const queryClient = useQueryClient();
   const [selectedParamedic, setSelectedParamedic] = useState("");
   const [result, setResult] = useState("");
+  const [toast, setToast] = useState(null);
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  };
 
   const { data: users = [] } = useQuery({
     queryKey: ["users-paramedics"],
@@ -28,7 +35,8 @@ export default function WeeklyCheckupDialog({ siteId, siteName, onClose, onSucce
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["weekly-checkups"] });
       onSuccess?.();
-      onClose();
+      showToast("הבדיקה השבועית נשמרה בהצלחה");
+      setTimeout(() => onClose(), 1800);
     },
   });
 
@@ -44,6 +52,26 @@ export default function WeeklyCheckupDialog({ siteId, siteName, onClose, onSucce
   };
 
   return (
+    <>
+    <AnimatePresence>
+      {toast && (
+        <motion.div
+          key="toast"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          style={{
+            position: "fixed", bottom: 90, left: "50%", transform: "translateX(-50%)",
+            background: "#1e2a38", borderRadius: 12, padding: "12px 20px",
+            color: "#fff", fontSize: 15, fontWeight: 600,
+            zIndex: 100, whiteSpace: "nowrap", pointerEvents: "none"
+          }}
+        >
+          {toast}
+        </motion.div>
+      )}
+    </AnimatePresence>
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
         className="bg-card w-full max-w-md rounded-2xl p-6 space-y-4"
@@ -102,5 +130,6 @@ export default function WeeklyCheckupDialog({ siteId, siteName, onClose, onSucce
         </div>
       </div>
     </div>
+    </>
   );
 }

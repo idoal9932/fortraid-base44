@@ -16,6 +16,7 @@ const resultColors = {
 };
 
 export default function CheckupHistoryDialog({ siteName, checkups, onClose }) {
+  const sorted = [...checkups].sort((a, b) => new Date(b.check_date) - new Date(a.check_date));
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div
@@ -26,10 +27,10 @@ export default function CheckupHistoryDialog({ siteName, checkups, onClose }) {
         <p className="text-xs text-muted-foreground text-center">{siteName}</p>
 
         <div className="overflow-y-auto flex-1 space-y-2">
-          {checkups.length === 0 ? (
+          {sorted.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-6">אין בדיקות רשומות לאתר זה</p>
           ) : (
-            checkups.map(c => (
+            sorted.map(c => (
               <Card key={c.id} className="border">
                 <CardContent className="px-4 py-3 flex items-center justify-between gap-2">
                   <div>
