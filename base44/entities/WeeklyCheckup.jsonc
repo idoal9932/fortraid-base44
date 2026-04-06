@@ -1,0 +1,38 @@
+{
+  "name": "WeeklyCheckup",
+  "type": "object",
+  "properties": {
+    "site_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d0\u05ea\u05e8"
+    },
+    "site_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05d0\u05ea\u05e8"
+    },
+    "paramedic_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05e4\u05e8\u05de\u05d3\u05d9\u05e7"
+    },
+    "check_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u05ea\u05d0\u05e8\u05d9\u05da \u05d4\u05d1\u05d3\u05d9\u05e7\u05d4"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "all_present",
+        "missing_updated",
+        "missing_critical"
+      ],
+      "description": "\u05ea\u05d5\u05e6\u05d0\u05ea \u05d4\u05d1\u05d3\u05d9\u05e7\u05d4"
+    }
+  },
+  "required": [
+    "site_id",
+    "paramedic_name",
+    "check_date",
+    "result"
+  ]
+}
