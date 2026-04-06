@@ -57,8 +57,8 @@ export default function Patients() {
   });
 
   const handleSaveNewRow = () => {
-    if (!newRow.full_name.trim() || !newRow.id_number.toString().trim()) {
-      setRowError("שם מלא ות״ז הם שדות חובה");
+    if (!newRow.full_name.trim()) {
+      setRowError("שם מלא הוא שדה חובה");
       return;
     }
     setRowError("");
@@ -159,7 +159,7 @@ export default function Patients() {
                       <td className="px-2 py-1">
                         <input
                           className="w-full border rounded px-2 py-1 text-sm"
-                          placeholder="ת״ז *"
+                          placeholder="ת״ז"
                           value={newRow.id_number}
                           onChange={(e) => setNewRow({ ...newRow, id_number: e.target.value })}
                         />
