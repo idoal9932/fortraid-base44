@@ -10,11 +10,11 @@ const vitalsConfig = [
 ];
 
 export default function VitalsDisplay({ event }) {
-  const renderCard = ({ key, label, icon: Icon, unit, border }) => {
+  const renderCard = ({ key, label, icon: Icon, unit, border }, extraStyle = {}) => {
     const value = event[key];
     const hasValue = value !== undefined && value !== null && value !== "" && value !== 0;
     return (
-      <div key={key} className={`bg-muted/50 rounded-xl p-2 text-center flex-shrink-0 ${border}`}>
+      <div key={key} style={extraStyle} className={`bg-muted/50 rounded-xl p-2 text-center flex-shrink-0 ${border}`}>
         <Icon className="w-3.5 h-3.5 mx-auto text-muted-foreground mb-1" />
         <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
         <p className="text-xs font-bold mt-0.5">
@@ -28,17 +28,15 @@ export default function VitalsDisplay({ event }) {
     <>
       {/* Desktop: grid 5 columns */}
       <div className="hidden sm:grid grid-cols-5 gap-1.5">
-        {vitalsConfig.map(renderCard)}
+        {vitalsConfig.map(v => renderCard(v))}
       </div>
 
-      {/* Mobile: first 3 fixed, last 2 scrollable */}
-      <div className="flex sm:hidden gap-1.5">
-        <div className="grid grid-cols-3 gap-1.5 flex-shrink-0" style={{ width: "calc(60% + 0.25rem)" }}>
-          {vitalsConfig.slice(0, 3).map(renderCard)}
-        </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-0.5 flex-1 min-w-0" style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}>
-          {vitalsConfig.slice(3).map(renderCard)}
-        </div>
+      {/* Mobile: horizontal scroll, show 3 at a time */}
+      <div
+        className="flex sm:hidden gap-1.5 overflow-x-auto"
+        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+      >
+        {vitalsConfig.map(v => renderCard(v, { minWidth: "calc((100% - 2 * 6px) / 3)", width: "calc((100% - 2 * 6px) / 3)" }))}
       </div>
     </>
   );
