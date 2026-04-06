@@ -11,13 +11,6 @@ import { format, differenceInDays } from "date-fns";
 import PageHeader from "@/components/layout/PageHeader";
 
 const categoryLabels = {
-  equipment: "ציוד בסיסי",
-  medication: "תרופות",
-  consumable: "צינורות וטיפולים",
-  other: "אחר",
-};
-
-const inventoryCategoryLabels = {
   rashm_tzfp_car: "רשמ״צ רכב",
   monitoring: "מכשור רפואי",
   medications: "תרופות",
@@ -105,7 +98,7 @@ export default function InventoryAdmin() {
     return acc;
   }, {});
 
-  const categoryOrder = ["equipment", "medication", "consumable", "other"];
+  const categoryOrder = ["rashm_tzfp_car", "monitoring", "medications", "medications_routine", "medical_kit", "charged"];
   const sortedCategories = categoryOrder.filter((cat) => groupedItems[cat]);
 
   return (
@@ -135,6 +128,7 @@ export default function InventoryAdmin() {
               {Object.entries(categoryLabels).map(([key, label]) => (
                 <SelectItem key={key} value={key}>{label}</SelectItem>
               ))}
+
             </SelectContent>
           </Select>
 
@@ -162,6 +156,7 @@ export default function InventoryAdmin() {
                     {Object.entries(categoryLabels).map(([key, label]) => (
                       <SelectItem key={key} value={key}>{label}</SelectItem>
                     ))}
+
                   </SelectContent>
                 </Select>
                 <Input
@@ -219,7 +214,7 @@ export default function InventoryAdmin() {
 
         {sortedCategories.map((category) => (
           <div key={category} className="space-y-2">
-            <h3 className="font-bold text-sm px-4 pt-2">{categoryLabels[category]}</h3>
+            <h3 className="font-bold text-sm px-4 pt-2">{categoryLabels[category] || category}</h3>
             {groupedItems[category].map((item) => {
               const site = sites.find((s) => s.id === item.site_id);
               const alerts = getItemAlerts(item);
@@ -257,12 +252,12 @@ export default function InventoryAdmin() {
                             <select autoFocus className="border rounded px-2 py-0.5 text-xs"
                               value={editValue}
                               onChange={e => { updateItemMutation.mutate({ itemId: item.id, data: { category: e.target.value } }); }}>
-                              {Object.entries(inventoryCategoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                              {Object.entries(categoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                             </select>
                           ) : (
                             <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded cursor-pointer hover:bg-primary/10"
                               onClick={() => { setEditingCell({ id: item.id, field: "category" }); setEditValue(item.category); }}>
-                              {inventoryCategoryLabels[item.category] || item.category}
+                              {categoryLabels[item.category] || item.category}
                             </span>
                           )}
                           {site && (
