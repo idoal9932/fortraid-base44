@@ -8,6 +8,7 @@ import InventoryTable from "@/components/inventory/InventoryTable";
 import CheckupHistoryDialog from "@/components/inventory/CheckupHistoryDialog";
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function DoctorInventory() {
   const { user } = useAuth();
@@ -47,17 +48,17 @@ export default function DoctorInventory() {
 
         {/* Site Selector */}
         <div className="mt-6">
-          <select
-            value={selectedSiteId}
-            onChange={e => { setSelectedSiteId(e.target.value); setSelectedCategory("all"); }}
-            className="w-full border rounded-md px-3 py-2 text-sm bg-background text-foreground appearance-none"
-            style={{ direction: "rtl" }}
-          >
-            <option value="">כל האתרים</option>
-            {sites.map(s => (
-              <option key={s.id} value={s.id}>{s.name}</option>
-            ))}
-          </select>
+          <Select value={selectedSiteId} onValueChange={val => { setSelectedSiteId(val === "__all__" ? "" : val); setSelectedCategory("all"); }}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="כל האתרים" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__all__">כל האתרים</SelectItem>
+              {sites.map(s => (
+                <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Inventory Table + Checkup button between categories and table */}
