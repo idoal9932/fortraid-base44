@@ -55,20 +55,27 @@ export default function InventoryPage() {
   });
 
   const handleCheckboxClick = (item) => {
-    if (!item.min_threshold || item.quantity >= item.min_threshold) return;
+    const isCurrentlyChecked = checkedItems[item.id];
 
+    if (isCurrentlyChecked) {
+      // Toggle off — item no longer available
+      setCheckedItems(prev => ({ ...prev, [item.id]: false }));
+      return;
+    }
+
+    // Toggle on — mark item as available
     setCheckedItems(prev => ({ ...prev, [item.id]: true }));
-    setConfirmingItem(item.id);
 
-    updateItemMutation.mutate({
-      id: item.id,
-      data: { quantity: item.min_threshold, last_checked: format(new Date(), "yyyy-MM-dd HH:mm"), checked_by: user?.full_name }
-    }, {
-      onSuccess: () => {
-        setConfirmingItem(null);
-        // checkedItems stays true — V remains visible
-      }
-    });
+    // If quantity is below minimum, auto-fill to minimum
+    if (item.min_threshold && item.quantity < item.min_threshold) {
+      setConfirmingItem(item.id);
+      updateItemMutation.mutate({
+        id: item.id,
+        data: { quantity: item.min_threshold, last_checked: format(new Date(), "yyyy-MM-dd HH:mm"), checked_by: user?.full_name }
+      }, {
+        onSuccess: () => setConfirmingItem(null)
+      });
+    }
   };
 
   const handleMarkAllValid = () => {
