@@ -121,7 +121,7 @@ export default function NewEvent() {
 
   if (success) {
     return (
-      <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#f1f5f9] gap-6 px-6" dir="rtl">
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#070d18] gap-6 px-6" dir="rtl">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -146,7 +146,7 @@ export default function NewEvent() {
             </div>
           )}
         </div>
-        <Button onClick={reset} className="w-full h-16 text-xl font-bold bg-[#dc2626] hover:bg-[#b91c1c] text-white">
+        <Button onClick={reset} className="w-full h-16 text-xl font-bold bg-teal-500 hover:bg-teal-600 text-white">
           פתח אירוע חדש
         </Button>
       </div>
@@ -154,9 +154,9 @@ export default function NewEvent() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f1f5f9]" dir="rtl">
+    <div className="flex flex-col min-h-screen bg-[#070d18]" dir="rtl">
       {/* Header */}
-      <div className="bg-[#1e2a38] text-white px-4 pt-10 pb-5">
+      <div className="bg-[#0a1628] text-white px-4 pt-10 pb-5">
         <h1 className="text-xl font-bold">פתיחת אירוע חדש</h1>
         {user?.current_site_name && (
           <p className="text-white/70 text-sm mt-0.5">{user.current_site_name}</p>
@@ -164,7 +164,7 @@ export default function NewEvent() {
       </div>
 
       {/* Progress bar */}
-      <div className="bg-[#1e2a38] px-4 pb-4">
+      <div className="bg-[#0a1628] px-4 pb-4">
         <div className="flex gap-2 max-w-2xl mx-auto">
           {STEPS.map((label, i) => (
             <div key={i} className="flex-1">
@@ -300,7 +300,7 @@ export default function NewEvent() {
                <div className="flex gap-2 mb-4">
                  <Button
                      type="button"
-                     className="flex-1 h-14 gap-2 text-base bg-[#dc2626] hover:bg-[#b91c1c] text-white"
+                     className="flex-1 h-14 gap-2 text-base bg-teal-500 hover:bg-teal-600 text-white"
                      onClick={() => cameraInputRef.current?.click()}
                    >
                      <Camera className="w-5 h-5" />
@@ -308,7 +308,7 @@ export default function NewEvent() {
                    </Button>
                    <Button
                      type="button"
-                     className="flex-1 h-14 gap-2 text-base bg-[#dc2626] hover:bg-[#b91c1c] text-white"
+                     className="flex-1 h-14 gap-2 text-base bg-teal-500 hover:bg-teal-600 text-white"
                      onClick={() => fileInputRef.current?.click()}
                    >
                      <Camera className="w-5 h-5" />
@@ -368,7 +368,7 @@ export default function NewEvent() {
              )}
              {currentStep < 2 ? (
              <Button
-             className="flex-1 h-16 text-xl font-bold bg-[#dc2626] hover:bg-[#b91c1c] text-white"
+             className="flex-1 h-16 text-xl font-bold bg-teal-500 hover:bg-teal-600 text-white"
              disabled={currentStep === 0 && !selectedPatient}
              onClick={() => setCurrentStep(currentStep + 1)}
              >
@@ -376,7 +376,7 @@ export default function NewEvent() {
              </Button>
              ) : (
              <Button
-             className="flex-1 h-16 text-xl font-bold bg-[#dc2626] hover:bg-[#b91c1c] text-white relative overflow-hidden"
+             className="flex-1 h-16 text-xl font-bold bg-teal-500 hover:bg-teal-600 text-white relative overflow-hidden"
              disabled={submitting || !user?.current_site || !clinical.chief_complaint}
              onClick={handleSubmit}
              >
