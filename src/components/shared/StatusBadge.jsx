@@ -2,9 +2,9 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 
 const statusConfig = {
-  open: { label: "פתוח", className: "bg-red-100 text-red-900 border-red-200 hover:bg-red-100" },
-  followup: { label: "מעקב", className: "bg-blue-500/15 text-blue-600 border-blue-200 hover:bg-blue-500/15" },
-  closed: { label: "סגור", className: "bg-emerald-500/15 text-emerald-600 border-emerald-200 hover:bg-emerald-500/15" },
+  open: { label: "פתוח", className: "border-yellow-500/40 text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/10" },
+  followup: { label: "מעקב", className: "border-teal-500/40 text-teal-400 bg-teal-500/10 hover:bg-teal-500/10" },
+  closed: { label: "סגור", className: "border-emerald-500/40 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/10" },
 };
 
 export default function StatusBadge({ status }) {

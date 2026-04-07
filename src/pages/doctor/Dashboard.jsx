@@ -88,11 +88,11 @@ export default function DoctorDashboard() {
             <Card key={site.id} className="overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
-                   <MapPin className="w-4 h-4 text-[#dc2626]" />
+                   <MapPin className="w-4 h-4 text-teal-400" />
                    <span className="font-medium text-sm truncate">{site.name}</span>
                  </div>
                 <div className="flex items-baseline gap-1">
-                   <span className="text-3xl font-bold text-[#dc2626]">{site.openCount}</span>
+                   <span className="text-3xl font-bold text-teal-400">{site.openCount}</span>
                    <span className="text-xs text-muted-foreground">אירועים פתוחים</span>
                  </div>
               </CardContent>
@@ -191,7 +191,7 @@ export default function DoctorDashboard() {
           <div className="flex justify-center pt-2 pb-6">
             <button
               onClick={() => setDisplayCount(c => c + 20)}
-              className="text-[#dc2626] font-semibold text-sm hover:underline"
+              className="text-teal-400 font-semibold text-sm hover:underline"
             >
               טען עוד
             </button>

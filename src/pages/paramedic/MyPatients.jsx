@@ -134,8 +134,8 @@ export default function MyPatients() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
-                        <User className="w-4 h-4 text-[#dc2626]" />
+                      <div className="w-8 h-8 rounded-full bg-teal-900/30 flex items-center justify-center shrink-0">
+                        <User className="w-4 h-4 text-teal-400" />
                       </div>
                       <div className="min-w-0">
                         <p className="font-semibold text-sm truncate">{event.patient_name}</p>
@@ -163,7 +163,7 @@ export default function MyPatients() {
           <div className="flex justify-center pt-2 pb-6">
             <button
               onClick={() => setDisplayCount(c => c + 20)}
-              className="text-[#dc2626] font-semibold text-sm hover:underline"
+              className="text-teal-400 font-semibold text-sm hover:underline"
             >
               טען עוד
             </button>
